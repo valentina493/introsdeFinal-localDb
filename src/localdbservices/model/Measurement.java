@@ -35,7 +35,6 @@ import utility.DatePersistenceConverter;
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(propOrder = { "_measurementId", "personId", "value", "measureType", "measuringDate" })
 @NamedQueries({
-		//@NamedQuery(name = "Measurement.findAll", query = "SELECT m FROM Measurement m order by m.measuringDate , m._measurementId desc"),
 		@NamedQuery(name = "Measurement.findMeasuresByPersonAndMeasuretype", query = "SELECT m FROM Measurement m WHERE m.personId = :person AND m.measureType = :measureType order by m.measuringDate desc, m._measurementId desc"),
 		@NamedQuery(name = "Measurement.findLastMeasurementForEachMeasuretypeByPerson", query = "SELECT m FROM Measurement m WHERE m.personId = :person GROUP BY m.measureType HAVING m.measuringDate = max(m.measuringDate)"),
 		@NamedQuery(name = "Measurement.findMeasuresByPerson", query = "SELECT m FROM Measurement m WHERE m.personId = :person order by m.measuringDate desc, m._measurementId desc") })
@@ -60,10 +59,6 @@ public class Measurement implements Serializable {
 	@ManyToOne
 	@JoinColumn(name = "measureTypeId", referencedColumnName = "_measureTypeId", insertable = true, updatable = true)
 	private MeasureType measureType;
-
-	//	@ManyToOne
-	//	@JoinColumn(name = "personId", referencedColumnName = "_personId", insertable = true, updatable = true)
-	//	private Person person;
 
 	@Column(name = "personId")
 	private long personId;
@@ -101,14 +96,6 @@ public class Measurement implements Serializable {
 		this.measureType = measureType;
 	}
 
-	//	public Person getPerson() {
-	//		return person;
-	//	}
-	//
-	//	public void setPerson(Person person) {
-	//		this.person = person;
-	//	}
-
 	public long getPersonId() {
 		return personId;
 	}
@@ -116,12 +103,6 @@ public class Measurement implements Serializable {
 	public void setPersonId(long personId) {
 		this.personId = personId;
 	}
-
-	/*public static List<Measurement> getAll() { EntityManager em =
-	 * MyDatabaseDao.instance.createEntityManager(); List<Measurement> list =
-	 * em.createNamedQuery("Measurement.findAll",
-	 * Measurement.class).getResultList();
-	 * MyDatabaseDao.instance.closeConnections(em); return list; } */
 
 	public static Measurement findMeasurement(long measurementId) {
 		EntityManager em = MyDatabaseDao.instance.createEntityManager();

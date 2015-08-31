@@ -87,7 +87,7 @@ public class YummlyAdapter {
 		recipe.set_id(tree.path("id").asText());
 		recipe.setRecipeTitle(tree.path("name").asText());
 		recipe.setRecipeUrl(tree.path("attribution").path("url").asText());
-		recipe.setImageUrl(tree.path("images").get(0).path("imageUrlsBySize").path("90").asText());
+		recipe.setImageUrl(tree.path("images").get(0).path("hostedMediumUrl").asText());
 
 		Iterator<JsonNode> it = tree.path("nutritionEstimates").elements();
 		JsonNode node;
@@ -159,10 +159,9 @@ public class YummlyAdapter {
 
 		YummlyRecipe recipe = new YummlyRecipe();
 		recipe.set_id(r.path("id").asText());
-		recipe.setImageUrl(r.path("smallImageUrls").asText());
+		recipe.setImageUrl(r.path("smallImageUrls").get(0).asText());
 		recipe.setRecipeTitle(r.path("recipeName").asText());
 		recipe.setRecipeUrl(yummlyRecipeSite + recipe.get_id());
-		recipe.setImageUrl(r.path("smallImageUrls").asText());
 		return recipe;
 
 	}
@@ -205,7 +204,7 @@ public class YummlyAdapter {
 		while (it.hasNext()) {
 			node = it.next();
 			YummlyRecipe r = new YummlyRecipe();
-			r.setImageUrl(node.path("smallImageUrls").asText());
+			r.setImageUrl(node.path("smallImageUrls").get(0).asText());
 			r.setRecipeTitle(node.path("recipeName").asText());
 			r.set_id(node.path("id").asText());
 			r.setRecipeUrl(yummlyRecipeSite + r.get_id());
@@ -234,25 +233,13 @@ public class YummlyAdapter {
 		@XmlTransient
 		private int calories;
 
-		//		public String getImageUrl() {
-		//			return imageUrl;
-		//		}
-
 		public void setImageUrl(String imageUrl) {
 			this.imageUrl = imageUrl;
 		}
 
-		//		public String getRecipeUrl() {
-		//			return recipeUrl;
-		//		}
-
 		public void setRecipeUrl(String recipeUrl) {
 			this.recipeUrl = recipeUrl;
 		}
-
-		//		public String getRecipeTitle() {
-		//			return recipeTitle;
-		//		}
 
 		public void setRecipeTitle(String recipeTitle) {
 			this.recipeTitle = recipeTitle;
@@ -265,10 +252,6 @@ public class YummlyAdapter {
 		public void set_id(String _id) {
 			this._id = _id;
 		}
-
-		//		public int getCalories() {
-		//			return calories;
-		//		}
 
 		public void setCalories(int calories) {
 			this.calories = calories;

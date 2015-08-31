@@ -94,14 +94,6 @@ public interface Entities {
 	@WebResult(name = "goal")
 	public void setEvaluatedGoals(List<Goal> goals) throws SOAPFaultException, SOAPException;
 
-	//	@WebMethod(operationName = "readNonExpiredGoalsByPerson")
-	//	@WebResult(name = "goals")
-	//	public List<Goal> readNotExpiredGoalsByPerson(Long id);
-
-	//	@WebMethod(operationName = "readGoalsList")
-	//	@WebResult(name = "goals")
-	//	public List<Goal> readGoalsList();
-
 	/* MEASUREMENT REQUESTS */
 
 	//MEASUREMENT REQUEST #1
@@ -147,10 +139,6 @@ public interface Entities {
 	@WebMethod(operationName = "deleteMeasurement")
 	@WebResult(name = "measurement")
 	public void deleteMeasurement(Long id) throws SOAPFaultException, SOAPException;
-
-	//		@WebMethod(operationName = "readMeasurementList")
-	//		@WebResult(name = "measurements")
-	//		public List<Measurement> readMeasurementList();
 
 	/* MEASURETYPE REQUESTS */
 

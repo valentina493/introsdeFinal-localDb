@@ -26,12 +26,10 @@ import utility.DatePersistenceConverter;
 @XmlAccessorType(XmlAccessType.PROPERTY)
 @XmlType(propOrder = { "_goalId", "personId", "measureType", "minvalue", "maxvalue", "deadline", "created" })
 @NamedQueries({
-		//@NamedQuery(name = "Goal.findAll", query = "SELECT g FROM Goal g"),
 		@NamedQuery(name = "Goal.findActiveGoalByPersonAndMeasureType", query = "SELECT g FROM Goal g WHERE g.personId = :person AND g.measureType = :mtype AND g.deadline >= :date AND g.evaluated = false"),
 		@NamedQuery(name = "Goal.findActiveGoalByPerson", query = "SELECT g FROM Goal g WHERE g.personId = :person AND g.deadline >= :date AND g.evaluated = false"),
 		@NamedQuery(name = "Goal.findGoalByPerson", query = "SELECT g FROM Goal g WHERE g.personId = :person"),
 		@NamedQuery(name = "Goal.findExpiredGoalsByPerson", query = "SELECT g FROM Goal g WHERE g.personId = :person AND g.deadline <= :date AND g.evaluated = false")})
-		//@NamedQuery(name = "Goal.findNonExpiredGoalsByPerson", query = "SELECT g FROM Goal g WHERE g.person = :person AND g.deadline > :date ") })
 public class Goal implements Serializable {
 	private static final long serialVersionUID = 7894574996689231403L;
 
@@ -62,11 +60,6 @@ public class Goal implements Serializable {
 	@JoinColumn(name = "measureTypeId", referencedColumnName = "_measureTypeId", insertable = true, updatable = true)
 	private MeasureType measureType;
 
-//	//bi-directional many-to-one association to Person
-//	@ManyToOne
-//	@JoinColumn(name = "personId", referencedColumnName = "_personId", insertable = true, updatable = true)
-//	private Person person;
-
 	@Column(name = "personId")
 	private long personId;
 
@@ -83,16 +76,6 @@ public class Goal implements Serializable {
 	public void set_goalId(long _goalId) {
 		this._goalId = _goalId;
 	}
-
-	/* public String getComparator() { return this.comparator; }
-	 * 
-	 * public void setComparator(String comparator) { this.comparator =
-	 * comparator; }
-	 * 
-	 * /*@XmlJavaTypeAdapter(DateAdapter.class) public Date getDeadline() {
-	 * return this.deadline; }
-	 * 
-	 * public void setDeadline(Date deadline) { this.deadline = deadline; } */
 
 	public double getMinvalue() {
 		return this.minvalue;
@@ -117,14 +100,6 @@ public class Goal implements Serializable {
 	public void setMeasureType(MeasureType measureType) {
 		this.measureType = measureType;
 	}
-
-//	public Person getPerson() {
-//		return this.person;
-//	}
-//
-//	public void setPerson(Person person) {
-//		this.person = person;
-//	}
 
 	public long getPersonId() {
 		return this.personId;
@@ -161,14 +136,6 @@ public class Goal implements Serializable {
 		this.evaluated = evaluated;
 	}
 
-	/*
-	public static List<Goal> getAll() {
-		EntityManager em = MyDatabaseDao.instance.createEntityManager();
-		List<Goal> list = em.createNamedQuery("Goal.findAll", Goal.class).getResultList();
-		MyDatabaseDao.instance.closeConnections(em);
-		return list;
-	}*/
-		
 	public static Goal findGoal(long goalId) {
 		EntityManager em = MyDatabaseDao.instance.createEntityManager();
 		Goal g = em.find(Goal.class, goalId);
@@ -197,14 +164,9 @@ public class Goal implements Serializable {
 				.setParameter("person", person).setParameter("mtype", mt).setParameter("date", new Date())
 				.getResultList();
 
-		//Goal g = em.createNamedQuery("Goal.findActiveGoalByPersonAndMeasureType", Goal.class)
-		//	.setParameter("person", personId).setParameter("mtype", mt).setParameter("date", new Date()).getSingleResult();
-
 		MyDatabaseDao.instance.closeConnections(em);
-		//return g;
-
-		//if there is more than one element, return the first one
-		return (list.size() > 0) ? list.get(0) : null; // USO QUESTO E NON UN SINGLERESULT PERCHè è PIù SICURO --> ALTRIMENTI Dà ERRORE
+		// I use this and not singleResult because it's safer
+		return (list.size() > 0) ? list.get(0) : null;
 	}
 
 	public static List<Goal> getActiveGoalByPerson(long person) {
@@ -223,14 +185,6 @@ public class Goal implements Serializable {
 		MyDatabaseDao.instance.closeConnections(em);
 		return list;
 	}
-
-	/*public static List<Goal> getNotExpiredGoals(Person person) {
-		EntityManager em = MyDatabaseDao.instance.createEntityManager();
-		List<Goal> list = em.createNamedQuery("Goal.findNonExpiredGoalsByPerson", Goal.class)
-				.setParameter("person", person).setParameter("date", new Date()).getResultList();
-		MyDatabaseDao.instance.closeConnections(em);
-		return list;
-	}*/
 
 	public static Goal updateGoal(Goal g) {
 		EntityManager em = MyDatabaseDao.instance.createEntityManager();

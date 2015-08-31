@@ -56,12 +56,6 @@ public class Person implements Serializable {
 	@Convert(converter = DatePersistenceConverter.class)
 	private Date birthdate;
 
-	//	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-	//	private List<Goal> goalList;
-	//	
-	//	@OneToMany(mappedBy = "person", cascade = CascadeType.ALL)
-	//	private List<Measurement> measurementList;
-
 	public long get_personId() {
 		return this._personId;
 	}
@@ -94,24 +88,6 @@ public class Person implements Serializable {
 	public void setLastname(String lastname) {
 		this.lastname = lastname;
 	}
-
-	//	@XmlTransient
-	//	public List<Goal> getGoalList() {
-	//		return goalList;
-	//	}
-	//
-	//	public void setGoalList(List<Goal> goalList) {
-	//		this.goalList = goalList;
-	//	}
-	//	
-	//	@XmlTransient
-	//	public List<Measurement> getMeasurementList() {
-	//		return measurementList;
-	//	}
-	//
-	//	public void setMeasurementList(List<Measurement> measurementList) {
-	//		this.measurementList = measurementList;
-	//	}
 
 	public static List<Person> getAll() {
 

@@ -109,7 +109,6 @@ public class YummlyAdapter {
 	public YummlyRecipe getRandomRecipe(@QueryParam("recipeKeyWord") String keyword, @QueryParam("minCal") int minCal,
 			@QueryParam("maxCal") int maxCal, @QueryParam("course") String allowedCourse)
 					throws SAXException, IOException {
-
 		WebTarget provisoryWebTarget = yummlyWebTarget.path("recipes").queryParam("maxResult", pageSize);
 
 		if (keyword != null) {
@@ -129,6 +128,7 @@ public class YummlyAdapter {
 				.accept(MediaType.APPLICATION_JSON).get(Response.class);
 		
 		if (response.getStatus() != 200) {
+			System.out.println("ERROR: " + response.getStatus() + ", " + response.getStatusInfo());
 			throw new WebApplicationException(response.getStatus());
 		}
 		
@@ -144,10 +144,8 @@ public class YummlyAdapter {
 
 		response = provisoryWebTarget.queryParam("start", randomRecipe).request().header(appIdKeyword, appId)
 				.header(appKeyKeyword, appKey).accept(MediaType.APPLICATION_JSON).get(Response.class);
-
 		body = response.readEntity(String.class);
 		tree = mapper.readTree(body);
-
 		Iterator<JsonNode> matches = tree.path("matches").elements();
 
 		JsonNode r = null;
@@ -156,14 +154,25 @@ public class YummlyAdapter {
 		} else {
 			throw new WebApplicationException(Response.Status.NOT_FOUND);
 		}
-
+		
 		YummlyRecipe recipe = new YummlyRecipe();
 		recipe.set_id(r.path("id").asText());
-		recipe.setImageUrl(r.path("smallImageUrls").get(0).asText());
+		JsonNode imagenode = r.path("smallImageUrls").get(0);
+		
+		if(imagenode != null){
+			String imageurl = r.path("smallImageUrls").get(0).asText();
+			int index = imageurl.lastIndexOf("=s");
+			if(index == -1){
+				recipe.setImageUrl(imageurl);
+			} else {
+			String bigImageUrl = imageurl.substring(0, index) + "=s360";
+			recipe.setImageUrl(bigImageUrl);
+			}
+		}
+		
 		recipe.setRecipeTitle(r.path("recipeName").asText());
 		recipe.setRecipeUrl(yummlyRecipeSite + recipe.get_id());
 		return recipe;
-
 	}
 
 	@GET
@@ -256,5 +265,12 @@ public class YummlyAdapter {
 		public void setCalories(int calories) {
 			this.calories = calories;
 		}
+
+		@Override
+		public String toString() {
+			return "YummlyRecipe [_id=" + _id + ", imageUrl=" + imageUrl + ", recipeUrl=" + recipeUrl + ", recipeTitle="
+					+ recipeTitle + ", calories=" + calories + "]";
+		}
+		
 	}
 }

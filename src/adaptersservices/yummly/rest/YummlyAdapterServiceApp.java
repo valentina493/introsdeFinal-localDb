@@ -17,7 +17,7 @@ public class YummlyAdapterServiceApp {
 	}
 
 	public static ResourceConfig createApp() {
-		System.out.println("Starting REST virtualcoach services...");
+		System.out.println("Starting REST yummly adapter services...");
 		return new YummlyAdapterServiceApplicationConfig();
 	}
 }

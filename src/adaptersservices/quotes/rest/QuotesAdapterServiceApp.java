@@ -17,7 +17,7 @@ public class QuotesAdapterServiceApp {
 	}
 
 	public static ResourceConfig createApp() {
-		System.out.println("Starting REST virtualcoach services...");
+		System.out.println("Starting REST quotes adapter services...");
 		return new QuotesAdapterServiceApplicationConfig();
 	}
 }

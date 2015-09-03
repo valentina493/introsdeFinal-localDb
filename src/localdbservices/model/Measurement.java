@@ -36,7 +36,6 @@ import utility.DatePersistenceConverter;
 @XmlType(propOrder = { "_measurementId", "personId", "value", "measureType", "measuringDate" })
 @NamedQueries({
 		@NamedQuery(name = "Measurement.findMeasuresByPersonAndMeasuretype", query = "SELECT m FROM Measurement m WHERE m.personId = :person AND m.measureType = :measureType order by m.measuringDate desc, m._measurementId desc"),
-		@NamedQuery(name = "Measurement.findLastMeasurementForEachMeasuretypeByPerson", query = "SELECT m FROM Measurement m WHERE m.personId = :person GROUP BY m.measureType HAVING m.measuringDate = max(m.measuringDate)"),
 		@NamedQuery(name = "Measurement.findMeasuresByPerson", query = "SELECT m FROM Measurement m WHERE m.personId = :person order by m.measuringDate desc, m._measurementId desc") })
 public class Measurement implements Serializable {
 
@@ -128,10 +127,8 @@ public class Measurement implements Serializable {
 
 	public static List<Measurement> findLastMeasurementForEachMeasuretype(long person) {
 		EntityManager em = MyDatabaseDao.instance.createEntityManager();
-
-		List<Measurement> measurements = em
-				.createNamedQuery("Measurement.findLastMeasurementForEachMeasuretypeByPerson", Measurement.class)
-				.setParameter("person", person).getResultList();
+		String query = "Select * from (SELECT * FROM Measurement WHERE personId = " + person+" order BY measureTypeId, measuringDate) group by measureTypeId having max(measuringDate)";
+		List<Measurement> measurements = em.createNativeQuery(query, Measurement.class).getResultList();
 		MyDatabaseDao.instance.closeConnections(em);
 		return measurements;
 	}
